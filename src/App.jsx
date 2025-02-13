@@ -27,7 +27,7 @@ function App() {
   const [account, setAccount] = useState({
     username: "example@test.com",
     password: "example",
-  })
+  });
 
   const handleInputChange = (e) => {
     const { value , name } = e.target;
@@ -35,8 +35,8 @@ function App() {
     setAccount({
       ...account,
       [name]:value,
-    })
-  }
+    });
+  };
 
   //獲取產品列表的 API 請求:YJ第二週主線任務-> Jay教練提供的模板
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
@@ -56,7 +56,7 @@ function App() {
     e.preventDefault(); //移除預設觸發行為：防止表單預設提交
     
     try{
-      const res = await axios.post(`${BASE_URL}/v2/admin/signin`,account)
+      const res = await axios.post(`${BASE_URL}/v2/admin/signin`,account);
       
       //透過解構方式，取得：token , expired 資料
       const { token, expired } = res.data;
@@ -71,7 +71,7 @@ function App() {
       // 更新登入狀態：將 setIsAuth 改成 true
       setIsAuth(true);
     } catch(error){
-      console.error("登入失敗", error);
+      // console.error("登入失敗", error);
       alert("登入失敗");
       }
     };
@@ -141,7 +141,6 @@ function App() {
           
           default:
             break;
-
       }
 
       const modalInstance = Modal.getInstance(productModalRef.current);
@@ -182,8 +181,8 @@ function App() {
         ...tempProduct,
         //當值(type)為 checkbox 時，就會傳入`checked`值 ; 若type不為 checkbox 時，就會將`value`傳入`name`的屬性裡
         [name]: type=== 'checkbox' ? checked : value, 
-      })
-    }
+      });
+    };
 
   const handleImageChange = ( e , index ) =>{
     const { value } = e.target;
@@ -195,8 +194,8 @@ function App() {
     setTempProduct({
       ...tempProduct, //展開TempProduct
       imagesUrl: newImages, 
-    })
-  }
+    });
+  };
 
   
   {/* 新增按鈕顯示條件：點擊時對陣列「新增」一個空字串 */}
@@ -206,8 +205,8 @@ function App() {
     setTempProduct({
       ...tempProduct,
       imagesUrl:newImages, 
-    })
-  }
+    });
+  };
 
    {/* 刪除按鈕顯示條件：點擊時預設「移除」陣列中最後一個欄位 */}
   const handleRemoveImage = () => {
@@ -218,8 +217,8 @@ function App() {
     setTempProduct({
       ...tempProduct,
       imagesUrl:newImages, 
-    })
-  }
+    });
+  };
 
   {/* 串接新增商品 API */}
   const createProduct = async () => {
@@ -230,14 +229,12 @@ function App() {
           origin_price:Number(tempProduct.origin_price),
           price:Number(tempProduct.price),
           is_enabled:tempProduct.is_enabled ? 1 : 0
-        }
-
-      }) 
+        },
+      });
     } catch (error) {
       alert('新增產品失敗');
     }
-
-  }
+  };
 
     {/* 串接編輯商品 API */}
     const updateProduct = async () => {
@@ -248,30 +245,26 @@ function App() {
             origin_price:Number(tempProduct.origin_price),
             price:Number(tempProduct.price),
             is_enabled:tempProduct.is_enabled ? 1 : 0
-          }
-  
-        }) 
+          },
+        }) ;
       } catch (error) {
         alert('編輯產品失敗');
       }
-  
-    }
+    };
 
     {/* 串接刪除商品 API */}
     const deleteProduct = async () => {
       try {
-        await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/admin/product/${tempProduct.id}`) 
+        await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/admin/product/${tempProduct.id}`) ;
       } catch (error) {
         alert('刪除產品失敗');
       }
-  
-    }
+    };
 
 
   {/* 點擊Modal 的「確認」按鈕條件：會呼叫 「新增產品」的API指令 */}
   const handlUpdateProduct = async () => {
     const apiCall = modalMode === 'create' ? createProduct : updateProduct;
-
     try{
       await apiCall();
 
@@ -279,9 +272,9 @@ function App() {
 
       handleCloseProductModal(); //新增完產品，點擊 [ 確認 ] 按鈕後，要關閉Modal 視窗
     } catch (error){
-      alert('更新產品失敗'); 
+      alert('更新產品失敗'); // API 失敗時僅顯示錯誤訊息，不關閉 Modal
     }
-  }
+  };
 
    {/* 點擊刪除產品Modal的「刪除」鈕時，會觸發刪除API的函式 */}
   const handleDeleteProduct = async () => {
@@ -293,10 +286,9 @@ function App() {
       handleCloseDelProductModal(); //getProducts();更新成功後 > 把刪除的Ｍodal 關閉
 
     } catch (error) {
-      alert('刪除產品失敗') //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
-      
+      alert('刪除產品失敗'); //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
     }
-  }
+  };
 
 
   return (
@@ -308,7 +300,12 @@ function App() {
           <div className="col">
             <div className="d-flex justify-content-between">
               <h2>產品列表</h2>
-              <button onClick={()=>handleOpenProductModal('create')} type="button" className="btn btn-primary">建立新的產品</button>
+              <button 
+              onClick={()=>handleOpenProductModal('create')} 
+              type="button" 
+              className="btn btn-primary"
+              >
+                建立新的產品</button>
             </div>
 
             <table className="table">
@@ -330,15 +327,26 @@ function App() {
                     <td>{product.is_enabled? (
                     <span className="text-success">啟用中</span>
                         ) : (
-                          <>
                             <span className="text-danger">未啟用</span>
-                          </>
-                        )
-                 }
+                        )}
                     </td>
-                      <td><div className="btn-group">
-                          <button onClick={() => handleOpenProductModal('edit', product)} type="button" className="btn btn-outline-primary btn-sm">編輯</button>
-                          <button onClick={()=>handleOpenDelProductModal(product)} type="button" className="btn btn-outline-danger btn-sm">刪除</button>
+                      <td>
+                        <div className="btn-group">
+                          <button 
+                            onClick={() => handleOpenProductModal('edit', product)} 
+                            type="button" 
+                            className="btn btn-outline-primary btn-sm"
+                            >
+                              編輯
+                          </button>
+                          
+                          <button 
+                            onClick={()=>handleOpenDelProductModal(product)} 
+                            type="button" 
+                            className="btn btn-outline-danger btn-sm"
+                            >
+                              刪除
+                          </button>
                         </div>
                       </td>
                   </tr>
@@ -390,8 +398,15 @@ function App() {
         <div className="modal-content border-0 shadow">
           <div className="modal-header border-bottom">
             {/* 調整產品 Modal 的標題、傳入的值 */}
-            <h5 className="modal-title fs-4">{ modalMode ==='create'? '新增產品':'編輯產品'}</h5>
-            <button onClick={handleCloseProductModal} type="button" className="btn-close" aria-label="Close"></button>
+            <h5 className="modal-title fs-4">
+              { modalMode ==='create'? '新增產品':'編輯產品'}
+            </h5>
+            <button 
+              onClick={handleCloseProductModal} 
+              type="button" 
+              className="btn-close" 
+              aria-label="Close">
+            </button>
           </div>
 
           <div className="modal-body p-4">
@@ -451,12 +466,21 @@ function App() {
                     <div className="btn-group w-100">
                         {tempProduct.imagesUrl.length < 5 &&
                          (tempProduct.imagesUrl[tempProduct.imagesUrl.length - 1] !== '' ) && (
-                          <button onClick={handleAddImage} className="btn btn-outline-primary btn-sm w-100">新增圖片</button>
+                          <button 
+                            onClick={handleAddImage} 
+                            className="btn btn-outline-primary btn-sm w-100"
+                            >
+                              新增圖片
+                          </button>
                         )}
 
-                    { tempProduct.imagesUrl.length >= 1 && (
-                      <button onClick={handleRemoveImage} className="btn btn-outline-danger btn-sm w-100">取消圖片</button>
-                      )}
+                         {tempProduct.imagesUrl.length >= 1 && (
+                          <button onClick={handleRemoveImage} 
+                            className="btn btn-outline-danger btn-sm w-100"
+                            >
+                              取消圖片
+                          </button>
+                        )}
                     </div>
                 </div>
               </div>
@@ -520,8 +544,10 @@ function App() {
                       type="number"
                       className="form-control"
                       placeholder="請輸入原價"
+                      min="0"  // 限制最小值為 0，0211致凱助教建議：原價、售價 input 記得加上 min=0，否則會可以選擇負的數值
                     />
                   </div>
+
                   <div className="col-6">
                     <label htmlFor="price" className="form-label">
                       售價
@@ -534,6 +560,7 @@ function App() {
                       type="number"
                       className="form-control"
                       placeholder="請輸入售價"
+                      min="0"  // 限制最小值為 0，0211致凱助教建議：原價、售價 input 記得加上 min=0，否則會可以選擇負的數值
                     />
                   </div>
                 </div>
@@ -586,11 +613,19 @@ function App() {
           </div>
 
           <div className="modal-footer border-top bg-light">
-            <button onClick={handleCloseProductModal} type="button" className="btn btn-secondary">
+            <button 
+              onClick={handleCloseProductModal} 
+              type="button" 
+              className="btn btn-secondary"
+              >
               取消
             </button>
-            <button onClick={handlUpdateProduct} type="button" className="btn btn-primary">
-              確認
+            <button 
+              onClick={handlUpdateProduct} 
+              type="button" 
+              className="btn btn-primary"
+              >
+                確認
             </button>
           </div>
         </div>
