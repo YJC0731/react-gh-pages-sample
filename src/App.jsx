@@ -40,12 +40,15 @@ function App() {
 
   //獲取產品列表的 API 請求:YJ第二週主線任務-> Jay教練提供的模板
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
-  const getProducts = async () => {
+  //加入讀取Page資料變數動作
+  const getProducts = async ( page = 1 ) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/v2/api/${API_PATH}/admin/products`
+        `${BASE_URL}/v2/api/${API_PATH}/admin/products?page=${page}`
       );
       setProductList(res.data.products);
+      //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
+      setPageInfo(res.data.pagination);
     } catch (error) {
       alert("取得產品失敗");
     }
@@ -290,6 +293,16 @@ function App() {
     }
   };
 
+  // 第四週主線任務＿分頁元件
+  // 1.新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
+  const [ pageInfo , setPageInfo ] = useState({});
+
+  //讀取當前頁面的「頁碼」 資料的判斷式條件＆動作：
+  const handlePageChenge = (page) => {
+    getProducts(page);
+  }
+
+
 
   return (
     <>
@@ -355,6 +368,38 @@ function App() {
             </table>
            </div>
           </div>
+
+          {/* 第四週主線任務：分頁元件模板版型放置處 */}
+          <div className="d-flex justify-content-center mt-5">
+            <nav>
+              <ul className="pagination">
+                
+                <li className={`page-item ${!pageInfo.has_pre && 'disabled'}`}>
+                  <a onClick={()=> handlePageChenge(pageInfo.current_page - 1)}  className="page-link" href="#">
+                    上一頁
+                  </a>
+                </li>
+
+                {/* 頁碼生成：透過 Array.from ＋map渲染的方式：將對應的長度的陣列(頁碼)印出 */}
+                { Array.from({length:pageInfo.total_pages}) .map((_,index)=>(
+                    <li className={`page-item ${pageInfo.current_page === index + 1  && 'active'}`}>
+                    {/* 取得前頁面資料的判斷式條件 */}
+                    <a onClick={()=> handlePageChenge(index + 1)} className="page-link" href="#">
+                      {/* 在頁碼處帶上:因為index 是從0開始，所以用+1方式，讓頁碼從 1 開始做顯示 */}
+                      { index + 1 }
+                    </a>
+                  </li>
+                ))}
+
+                <li className={`page-item ${!pageInfo.has_next && 'disabled'}`}>
+                  <a onClick={()=> handlePageChenge(pageInfo.current_page+1) } className="page-link" href="#">
+                    下一頁
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          
         </div>
         ) : (
       //已完成的登入模板
