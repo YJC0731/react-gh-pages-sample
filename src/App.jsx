@@ -303,6 +303,35 @@ function App() {
   }
 
 
+  // 撰寫主圖的圖片上傳功能：handleFileChange 監聽事件的函式
+  const handleFileChange = async (e) => {
+    console.log(e.target); //檢查是哪個input觸發事件
+
+    //獲取使用者選擇的第一個檔案
+    const file = e.target.files[0];
+    
+    //使用FormData格式上傳
+    const formData = new FormData();
+    //加入file-to-upload的欄位，並存入使用者選擇的檔案（file)
+    formData.append('file-to-upload',file)
+
+    //console.log(formData);// 印出 FormData 物件，確認內容
+
+    try {
+      const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/upload`,formData);
+
+      const uploadedImagerl = res.data.imageUrl;
+
+      //如果 uploadedImagerl 上傳成功，將它 set 到 tempProduct 裡的 imageUrl
+      setTempProduct({
+        ...tempProduct, //複製一個tempProduct
+        imageUrl:uploadedImagerl, //欄位代上imageUrl：值代入上傳的圖片uploadedImagerl
+      });
+
+    } catch (error) {
+      alert('上傳圖片失敗，請確認圖片格式及大小的相關限制');
+    }
+  }
 
   return (
     <>
@@ -457,6 +486,19 @@ function App() {
           <div className="modal-body p-4">
             <div className="row g-4">
               <div className="col-md-4">
+               
+               {/* 主圖的圖片上傳功能 */}
+               <div className="mb-5">
+                  <label htmlFor="fileInput" className="form-label"> 圖片上傳 </label>
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    className="form-control"
+                    id="fileInput"
+                    onChange={handleFileChange}
+                  />
+                </div>
+
                 <div className="mb-4">
                   <label htmlFor="primary-image" className="form-label">
                     主圖
