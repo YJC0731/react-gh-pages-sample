@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'bootstrap';
 import LoginPage from './pages/LoginPage';
+import Pagination from './ components /Pagination';
+import ProductModal from './ components /ProductModal';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL ;
 const API_PATH = import.meta.env.VITE_API_PATH ;
@@ -24,6 +26,10 @@ const defaultModalState = {
 function App() {
   const [isAuth, setIsAuth ] = useState(false); //在還沒登入前用false（預設）狀態
   const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中 
+
+  //新增狀態做Modal開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  const [isProductModalOpen , setIsProductModalOpen ] = useState(false);
+
 
   //獲取產品列表的 API 請求:YJ第二週主線任務-> Jay教練提供的模板
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
@@ -52,7 +58,7 @@ function App() {
           console.dir(error);
       }
     };
-    
+  
     //若想在登入頁面渲染時呼叫checkUserLogin裡的API>需要透過React hook：useEffect 戳一次API
     useEffect(()=>{
       //戳API時，能從 cookie 取得token
@@ -69,7 +75,6 @@ function App() {
     },[])
 
     //透過 useRef 取得 DOM
-    const productModalRef = useRef(null);
     const delProductModalRef = useRef(null); //// 透過 useRef 取得刪除確認 Modal 的 DOM
 
      {/* 新增一個狀態來判斷:判斷當前動作是新增產品還是編輯產品 */}
@@ -77,19 +82,40 @@ function App() {
 
     //透過 useEffect ​的 hook，在頁面渲染後取得 productModalRef的 DOM元素
     useEffect(()=>{
-      new Modal(productModalRef.current, {
-        backdrop:false // 點擊Modal灰色區塊不進行關閉
-      });
-
       //// 透過 useEffect 的 hook，在頁面渲染後初始化 Modal
       new Modal(delProductModalRef.current, {
         backdrop:false // 點擊Modal灰色區塊不進行關閉
       });
-
-      Modal.getInstance(productModalRef.current);//取得Modal實例:Modal.getInstance(ref)
       
     },[])
 
+    
+    {/* 點擊[刪除]按鈕時，開啟刪除確認 Modal：delProductModalRef的開啟 */}
+    const handleOpenDelProductModal =(product) =>{
+      setTempProduct(product);
+      const modalInstance = Modal.getInstance(delProductModalRef.current);
+      modalInstance.show();
+    }
+
+    {/* 點擊刪除產品的Ｍodal：delProductModalRef的關閉 */}
+    const handleCloseDelProductModal =() =>{
+      const modalInstance = Modal.getInstance(delProductModalRef.current);
+      modalInstance.hide();
+    }
+
+
+    {/* 綁定產品 Modal 狀態:value={tempProduct.對應的變數} + onChange={handleModalInputChange}事件 */}
+    const[tempProduct,setTempProduct] = useState(defaultModalState); 
+    
+
+    {/* 串接刪除商品 API */}
+    const deleteProduct = async () => {
+      try {
+        await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/admin/product/${tempProduct.id}`) ;
+      } catch (error) {
+        alert('刪除產品失敗');
+      }
+    };
 
     {/* 點擊「建立新的產品」＋「編輯」按鈕，會打開Ｍodal */}
     //宣告handleOpenProductModal(變數)：進行開關產品的Modal：
@@ -109,152 +135,26 @@ function App() {
             break;
       }
 
-      const modalInstance = Modal.getInstance(productModalRef.current);
-      //拿到Modal實例後，即可透過modalInstance.show(); 開啟Modal
-      modalInstance.show();
+      setIsProductModalOpen(true);// 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
+
+      // const modalInstance = Modal.getInstance(productModalRef.current);
+      // //拿到Modal實例後，即可透過modalInstance.show(); 開啟Modal
+      // modalInstance.show();
     }
 
-    {/* 點擊Ｍodal的取消＆Ｘ按鈕會進行關閉 */}
-    //宣告handleCloseProductModal(變數)：進行開關產品的Modal：
-    const handleCloseProductModal =() =>{
-      const modalInstance = Modal.getInstance(productModalRef.current);
-      //拿到Modal實例後，即可透過modalInstance.hide(); 關閉Modal
-      modalInstance.hide();
-    }
-    
-    {/* 點擊[刪除]按鈕時，開啟刪除確認 Modal：delProductModalRef的開啟 */}
-    const handleOpenDelProductModal =(product) =>{
-      setTempProduct(product);
-      const modalInstance = Modal.getInstance(delProductModalRef.current);
-      modalInstance.show();
-    }
-
-    {/* 點擊刪除產品的Ｍodal：delProductModalRef的關閉 */}
-    const handleCloseDelProductModal =() =>{
-      const modalInstance = Modal.getInstance(delProductModalRef.current);
-      modalInstance.hide();
-    }
-
-
-    {/* 綁定產品 Modal 狀態:value={tempProduct.對應的變數} + onChange={handleModalInputChange}事件 */}
-    const[tempProduct,setTempProduct] = useState(defaultModalState); 
-    
-    const handleModalInputChange =(e)=>{
-      const { value , name , checked , type } = e.target;
-
-      setTempProduct({
-        //展開TempProduct
-        ...tempProduct,
-        //當值(type)為 checkbox 時，就會傳入`checked`值 ; 若type不為 checkbox 時，就會將`value`傳入`name`的屬性裡
-        [name]: type=== 'checkbox' ? checked : value, 
-      });
-    };
-
-  const handleImageChange = ( e , index ) =>{
-    const { value } = e.target;
-
-    const newImages = [ ...tempProduct.imagesUrl ];
-
-    newImages[index]=value;
-
-    setTempProduct({
-      ...tempProduct, //展開TempProduct
-      imagesUrl: newImages, 
-    });
-  };
-
-  
-  {/* 新增按鈕顯示條件：點擊時對陣列「新增」一個空字串 */}
-  const handleAddImage = () => {
-    const newImages = [ ...tempProduct.imagesUrl, " " ]; //複製imagesUrl到newImages的新陣列裡
-    
-    setTempProduct({
-      ...tempProduct,
-      imagesUrl:newImages, 
-    });
-  };
-
-   {/* 刪除按鈕顯示條件：點擊時預設「移除」陣列中最後一個欄位 */}
-  const handleRemoveImage = () => {
-    const newImages = [ ...tempProduct.imagesUrl]; //複製imagesUrl到newImages的新陣列裡
-    
-    newImages.pop();
-    
-    setTempProduct({
-      ...tempProduct,
-      imagesUrl:newImages, 
-    });
-  };
-
-  {/* 串接新增商品 API */}
-  const createProduct = async () => {
-    try {
-      await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/product`,{
-        data:{
-          ...tempProduct,
-          origin_price:Number(tempProduct.origin_price),
-          price:Number(tempProduct.price),
-          is_enabled:tempProduct.is_enabled ? 1 : 0
-        },
-      });
-    } catch (error) {
-      alert('新增產品失敗');
-    }
-  };
-
-    {/* 串接編輯商品 API */}
-    const updateProduct = async () => {
+    {/* 點擊刪除產品Modal的「刪除」鈕時，會觸發刪除API的函式 */}
+    const handleDeleteProduct = async () => {
       try {
-        await axios.put(`${BASE_URL}/v2/api/${API_PATH}/admin/product/${tempProduct.id}`,{
-          data:{
-            ...tempProduct,
-            origin_price:Number(tempProduct.origin_price),
-            price:Number(tempProduct.price),
-            is_enabled:tempProduct.is_enabled ? 1 : 0
-          },
-        }) ;
+        await deleteProduct();
+
+        getProducts(); //成功刪除產品deleteProduct()，需要呼叫getProducts();更新產品列表
+
+        handleCloseDelProductModal(); //getProducts();更新成功後 > 把刪除的Ｍodal 關閉
+
       } catch (error) {
-        alert('編輯產品失敗');
+        alert('刪除產品失敗'); //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
       }
     };
-
-    {/* 串接刪除商品 API */}
-    const deleteProduct = async () => {
-      try {
-        await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/admin/product/${tempProduct.id}`) ;
-      } catch (error) {
-        alert('刪除產品失敗');
-      }
-    };
-
-
-  {/* 點擊Modal 的「確認」按鈕條件：會呼叫 「新增產品」的API指令 */}
-  const handlUpdateProduct = async () => {
-    const apiCall = modalMode === 'create' ? createProduct : updateProduct;
-    try{
-      await apiCall();
-
-      getProducts();
-
-      handleCloseProductModal(); //新增完產品，點擊 [ 確認 ] 按鈕後，要關閉Modal 視窗
-    } catch (error){
-      alert('更新產品失敗'); // API 失敗時僅顯示錯誤訊息，不關閉 Modal
-    }
-  };
-
-   {/* 點擊刪除產品Modal的「刪除」鈕時，會觸發刪除API的函式 */}
-  const handleDeleteProduct = async () => {
-    try {
-      await deleteProduct();
-
-      getProducts(); //成功刪除產品deleteProduct()，需要呼叫getProducts();更新產品列表
-
-      handleCloseDelProductModal(); //getProducts();更新成功後 > 把刪除的Ｍodal 關閉
-
-    } catch (error) {
-      alert('刪除產品失敗'); //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
-    }
-  };
 
   // 第四週主線任務＿分頁元件
   // 1.新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
@@ -265,36 +165,6 @@ function App() {
     getProducts(page);
   }
 
-
-  // 撰寫主圖的圖片上傳功能：handleFileChange 監聽事件的函式
-  const handleFileChange = async (e) => {
-    console.log(e.target); //檢查是哪個input觸發事件
-
-    //獲取使用者選擇的第一個檔案
-    const file = e.target.files[0];
-    
-    //使用FormData格式上傳
-    const formData = new FormData();
-    //加入file-to-upload的欄位，並存入使用者選擇的檔案（file)
-    formData.append('file-to-upload',file)
-
-    //console.log(formData);// 印出 FormData 物件，確認內容
-
-    try {
-      const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/upload`,formData);
-
-      const uploadedImagerl = res.data.imageUrl;
-
-      //如果 uploadedImagerl 上傳成功，將它 set 到 tempProduct 裡的 imageUrl
-      setTempProduct({
-        ...tempProduct, //複製一個tempProduct
-        imageUrl:uploadedImagerl, //欄位代上imageUrl：值代入上傳的圖片uploadedImagerl
-      });
-
-    } catch (error) {
-      alert('上傳圖片失敗，請確認圖片格式及大小的相關限制');
-    }
-  }
 
   return (
     <>
@@ -361,293 +231,18 @@ function App() {
            </div>
           </div>
 
-          {/* 第四週主線任務：分頁元件模板版型放置處 */}
-          <div className="d-flex justify-content-center mt-5">
-            <nav>
-              <ul className="pagination">
-                
-                <li className={`page-item ${!pageInfo.has_pre && 'disabled'}`}>
-                  <a onClick={()=> handlePageChenge(pageInfo.current_page - 1)}  className="page-link" href="#">
-                    上一頁
-                  </a>
-                </li>
-
-                {/* 頁碼生成：透過 Array.from ＋map渲染的方式：將對應的長度的陣列(頁碼)印出，要記得加上key */}
-                { Array.from({length:pageInfo.total_pages}) .map((_,index)=>(
-                    <li key={index} className={`page-item ${pageInfo.current_page === index + 1  && 'active'}`}>
-                    {/* 取得前頁面資料的判斷式條件 */}
-                    <a onClick={()=> handlePageChenge(index + 1)} className="page-link" href="#">
-                      {/* 在頁碼處帶上:因為index 是從0開始，所以用+1方式，讓頁碼從 1 開始做顯示 */}
-                      { index + 1 }
-                    </a>
-                  </li>
-                ))}
-
-                <li className={`page-item ${!pageInfo.has_next && 'disabled'}`}>
-                  <a onClick={()=> handlePageChenge(pageInfo.current_page+1) } className="page-link" href="#">
-                    下一頁
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          
+          <Pagination pageInfo={pageInfo} handlePageChenge={handlePageChenge}/>
         </div>
         ) : <LoginPage getProducts={getProducts} /> } 
 
-    
-    {/* Week03主線任務：加入產品 Modal */}
-    <div ref={productModalRef} id="productModal" className="modal" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-      <div className="modal-dialog modal-dialog-centered modal-xl">
-        <div className="modal-content border-0 shadow">
-          <div className="modal-header border-bottom">
-            {/* 調整產品 Modal 的標題、傳入的值 */}
-            <h5 className="modal-title fs-4">
-              { modalMode ==='create'? '新增產品':'編輯產品'}
-            </h5>
-            <button 
-              onClick={handleCloseProductModal} 
-              type="button" 
-              className="btn-close" 
-              aria-label="Close">
-            </button>
-          </div>
-
-          <div className="modal-body p-4">
-            <div className="row g-4">
-              <div className="col-md-4">
-               
-               {/* 主圖的圖片上傳功能 */}
-               <div className="mb-5">
-                  <label htmlFor="fileInput" className="form-label"> 圖片上傳 </label>
-                  <input
-                    type="file"
-                    accept=".jpg,.jpeg,.png"
-                    className="form-control"
-                    id="fileInput"
-                    onChange={handleFileChange}
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="primary-image" className="form-label">
-                    主圖
-                  </label>
-                  <div className="input-group">
-                    <input
-                      value={tempProduct.imageUrl}
-                      onChange={handleModalInputChange}
-                      name="imageUrl"
-                      type="text"
-                      id="primary-image"
-                      className="form-control"
-                      placeholder="請輸入圖片連結"
-                    />
-                  </div>
-                  <img
-                    src={tempProduct.imageUrl}
-                    alt={tempProduct.title}
-                    className="img-fluid"
-                  />
-                </div>
-
-                {/* 副圖 */}
-                <div className="border border-2 border-dashed rounded-3 p-3">
-                  {tempProduct.imagesUrl?.map((image, index) => (
-                    <div key={index} className="mb-2">
-                      <label
-                        htmlFor={`imagesUrl-${index + 1}`}
-                        className="form-label"
-                      >
-                        副圖 {index + 1}
-                      </label>
-                      <input
-                        value={image}
-                        onChange={ (e) => handleImageChange( e , index ) }
-                        id={`imagesUrl-${index + 1}`}
-                        type="text"
-                        placeholder={`圖片網址 ${index + 1}`}
-                        className="form-control mb-2"
-                      />
-                      {image && (
-                        <img
-                          src={image}
-                          alt={`副圖 ${index + 1}`}
-                          className="img-fluid mb-2"
-                        />
-                      )}
-                    </div>
-                  ))}
-
-                    {/* 撰寫產品 Modal 多圖按鈕顯示邏輯 */}
-                    <div className="btn-group w-100">
-                        {tempProduct.imagesUrl.length < 5 &&
-                         (tempProduct.imagesUrl[tempProduct.imagesUrl.length - 1] !== '' ) && (
-                          <button 
-                            onClick={handleAddImage} 
-                            className="btn btn-outline-primary btn-sm w-100"
-                            >
-                              新增圖片
-                          </button>
-                        )}
-
-                         {tempProduct.imagesUrl.length >= 1 && (
-                          <button onClick={handleRemoveImage} 
-                            className="btn btn-outline-danger btn-sm w-100"
-                            >
-                              取消圖片
-                          </button>
-                        )}
-                    </div>
-                </div>
-              </div>
-
-              <div className="col-md-8">
-                <div className="mb-3">
-                  <label htmlFor="title" className="form-label">
-                    標題
-                  </label>
-                  <input
-                    value={tempProduct.title}
-                    onChange={handleModalInputChange}
-                    name="title"
-                    id="title"
-                    type="text"
-                    className="form-control"
-                    placeholder="請輸入標題"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="category" className="form-label">
-                    分類
-                  </label>
-                  <input
-                    value={tempProduct.category}
-                    onChange={handleModalInputChange}
-                    name="category"
-                    id="category"
-                    type="text"
-                    className="form-control"
-                    placeholder="請輸入分類"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="unit" className="form-label">
-                    單位
-                  </label>
-                  <input
-                    value={tempProduct.unit}
-                    onChange={handleModalInputChange}
-                    name="unit"
-                    id="unit"
-                    type="text"
-                    className="form-control"
-                    placeholder="請輸入單位"
-                  />
-                </div>
-
-                <div className="row g-3 mb-3">
-                  <div className="col-6">
-                    <label htmlFor="origin_price" className="form-label">
-                      原價
-                    </label>
-                    <input
-                      value={tempProduct.origin_price}
-                      onChange={handleModalInputChange}
-                      name="origin_price"
-                      id="origin_price"
-                      type="number"
-                      className="form-control"
-                      placeholder="請輸入原價"
-                      min="0"  // 限制最小值為 0，0211致凱助教建議：原價、售價 input 記得加上 min=0，否則會可以選擇負的數值
-                    />
-                  </div>
-
-                  <div className="col-6">
-                    <label htmlFor="price" className="form-label">
-                      售價
-                    </label>
-                    <input
-                      value={tempProduct.price}
-                      onChange={handleModalInputChange}
-                      name="price"
-                      id="price"
-                      type="number"
-                      className="form-control"
-                      placeholder="請輸入售價"
-                      min="0"  // 限制最小值為 0，0211致凱助教建議：原價、售價 input 記得加上 min=0，否則會可以選擇負的數值
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="description" className="form-label">
-                    產品描述
-                  </label>
-                  <textarea
-                    value={tempProduct.description}
-                    onChange={handleModalInputChange}
-                    name="description"
-                    id="description"
-                    className="form-control"
-                    rows={4}
-                    placeholder="請輸入產品描述"
-                  ></textarea>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="content" className="form-label">
-                    說明內容
-                  </label>
-                  <textarea
-                    value={tempProduct.content}
-                    onChange={handleModalInputChange}
-                    name="content"
-                    id="content"
-                    className="form-control"
-                    rows={4}
-                    placeholder="請輸入說明內容"
-                  ></textarea>
-                </div>
-
-                <div className="form-check">
-                  <input
-                    checked={tempProduct.is_enabled}
-                    onChange={handleModalInputChange}
-                    name="is_enabled"
-                    type="checkbox"
-                    className="form-check-input"
-                    id="isEnabled"
-                  />
-                  <label className="form-check-label" htmlFor="isEnabled">
-                    是否啟用
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-footer border-top bg-light">
-            <button 
-              onClick={handleCloseProductModal} 
-              type="button" 
-              className="btn btn-secondary"
-              >
-              取消
-            </button>
-            <button 
-              onClick={handlUpdateProduct} 
-              type="button" 
-              className="btn btn-primary"
-              >
-                確認
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ProductModal 
+      modalMode={modalMode}
+      getProducts={getProducts}
+      tempProduct={tempProduct}
+      isOpen={isProductModalOpen}
+      setIsOpen={setIsProductModalOpen} 
+      
+      />
 
    {/* Week03主線任務：加入刪除產品 Modal */}
       <div
