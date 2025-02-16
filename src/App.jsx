@@ -20,6 +20,7 @@ const defaultModalState = {
   description: "",
   content: "",
   is_enabled: 0,
+  is_hot: 0, 
   imagesUrl: [""]
 };
 
@@ -145,14 +146,16 @@ function App() {
                 建立新的產品</button>
             </div>
 
-            <table className="table">
+            <table className="table mt-5">
               <thead>
                 <tr>
                   <th scope="col">產品名稱</th>
                   <th scope="col">原價</th>
                   <th scope="col">售價</th>
                   <th scope="col">是否啟用</th>
-                  <th scope="col"></th>
+                  {/* Week04_lv3任務:新增自訂欄位：是否為熱銷產品 is_hot */}
+                 <th  scope="col">熱銷狀態</th> 
+                  <th className="text-center" scope="col">編輯資料</th>
                 </tr>
               </thead>
               <tbody>
@@ -167,7 +170,15 @@ function App() {
                             <span className="text-danger">未啟用</span>
                         )}
                     </td>
-                      <td>
+                    
+                    {/* Week04_lv3任務:新增自訂欄位：是否為熱銷產品 is_hot */}
+                    <td>{product.is_hot? (
+                    <span className="text-danger">熱銷商品</span>
+                        ) : (
+                            <span className="text-secondary">一般商品</span>
+                        )}
+                    </td>
+                      <td className="text-center">
                         <div className="btn-group">
                           <button 
                             onClick={() => handleOpenProductModal('edit', product)} 

@@ -22,6 +22,7 @@ function ProductModal({
         //重新把ModalData設成最新的值
         setModalData({
             ...tempProduct,  //複製一份tempPeoduct
+            is_hot: tempProduct.is_hot ?? false,  // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
         })
     },[tempProduct]) //當tempPeoduct更新後，重新讓setModalData也更新一份
 
@@ -69,7 +70,8 @@ function ProductModal({
               [name]: type=== 'checkbox' ? checked : value, 
             });
           };
-      
+        
+
         const handleImageChange = ( e , index ) =>{
         const { value } = e.target;
     
@@ -114,7 +116,8 @@ function ProductModal({
                 ...modalData,
                 origin_price:Number(modalData.origin_price),
                 price:Number(modalData.price),
-                is_enabled:modalData.is_enabled ? 1 : 0
+                is_enabled:modalData.is_enabled ? 1 : 0,
+                is_hot:modalData.is_hot ? 1 : 0 //Week04_lv3任務:新增自訂欄位：是否為熱銷產品 is_hot
                 },
             });
             } catch (error) {
@@ -130,7 +133,8 @@ function ProductModal({
                 ...modalData,
                 origin_price:Number(modalData.origin_price),
                 price:Number(modalData.price),
-                is_enabled:modalData.is_enabled ? 1 : 0
+                is_enabled:modalData.is_enabled ? 1 : 0,
+                is_hot:modalData.is_hot ? 1 : 0 //Week04_lv3任務:新增自訂欄位：是否為熱銷產品 is_hot
                 },
             }) ;
             } catch (error) {
@@ -408,6 +412,22 @@ function ProductModal({
                         是否啟用
                         </label>
                     </div>
+
+                    {/* Week04_lv3任務:新增自訂欄位：是否為熱銷產品 is_hot */}
+                    <div className="form-check">
+                        <input
+                        checked={modalData.is_hot}
+                        onChange={handleModalInputChange}
+                        name="is_hot"
+                        type="checkbox"
+                        className="form-check-input"
+                        id="isHotProduct"
+                        />
+                        <label className="form-check-label" htmlFor="isHotProduct">
+                        是否為熱銷商品
+                        </label>
+                    </div>
+
                     </div>
                 </div>
                 </div>
