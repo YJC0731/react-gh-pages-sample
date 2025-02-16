@@ -150,9 +150,9 @@ function ProductModal({
     
             getProducts();
     
-            handleCloseProductModal(); //新增完產品，點擊 [ 確認 ] 按鈕後，要關閉Modal 視窗
+            handleCloseProductModal(); //新增完產品，點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
             } catch (error){
-            alert('更新產品失敗'); // API 失敗時僅顯示錯誤訊息，不關閉 Modal
+            alert('更新產品失敗，請檢查輸入內容'); // API 失敗時僅顯示錯誤訊息，不關閉 Modal
             }
         };
 
