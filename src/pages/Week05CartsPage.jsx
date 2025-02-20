@@ -15,9 +15,8 @@ function Week05CartsPage() {
    // Week05_取得購物車列表資料|
   const getCart = async () => { 
     try {
-        const res = axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
-
-        setCart(res.data.data.carts);
+        const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
+        setCart(res.data.data); //確保 cart 是整個物件
     } catch (error) {
         alert('取得購物車列表失敗，請再次嘗試')
     }
@@ -64,8 +63,10 @@ function Week05CartsPage() {
       const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/cart`,{
         data:{
           product_id,
-          qty: Number(qty)
-        },
+          qty: Number(qty),
+        }
+      }).then((res)=>{
+        console.log(res);
       })
     } catch (error) {
       alert ('加入購物車失敗');
@@ -208,13 +209,14 @@ function Week05CartsPage() {
             </thead>
 
             <tbody>
-              <tr>
+            {cart.carts?.map((cartItem)=>(
+              <tr key={cartItem.id}>
                 <td>
                   <button type="button" className="btn btn-outline-danger btn-sm">
                     x
                   </button>
                 </td>
-                <td></td>
+                <td>{cartItem.product.title}</td>
                 <td style={{ width: "150px" }}>
                   <div className="d-flex align-items-center">
                     <div className="btn-group me-2" role="group">
@@ -224,10 +226,12 @@ function Week05CartsPage() {
                       >
                         -
                       </button>
+                      
+                      {/* 數量欄位 */}
                       <span
                         className="btn border border-dark"
                         style={{ width: "50px", cursor: "auto" }}
-                      ></span>
+                      >{cartItem.qty}</span>
                       <button
                         type="button"
                         className="btn btn-outline-dark btn-sm"
@@ -236,19 +240,23 @@ function Week05CartsPage() {
                       </button>
                     </div>
                     <span className="input-group-text bg-transparent border-0">
-                      unit
+                      {cartItem.product.unit}
                     </span>
                   </div>
                 </td>
-                <td className="text-end">單項總價</td>
+                <td className="text-end">{cartItem.total}</td>
               </tr>
+             ))}
+              
             </tbody>
             <tfoot>
               <tr>
                 <td colSpan="3" className="text-end">
                   總計：
                 </td>
-                <td className="text-end" style={{ width: "130px" }}></td>
+                <td className="text-end" style={{ width: "130px" }}>
+                  {cart.total}
+                  </td>
               </tr>
             </tfoot>
           </table>
