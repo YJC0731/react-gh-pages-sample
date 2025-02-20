@@ -9,6 +9,20 @@ function Week05CartsPage() {
   const [products, setProducts] = useState([]);
   const [tempProduct, setTempProduct] = useState([]);
 
+  // Week05_cart狀態設定|
+  const [ cart , setCart ]=useState({});
+
+   // Week05_取得購物車列表資料|
+  const getCart = async () => { 
+    try {
+        const res = axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
+
+        setCart(res.data.data.carts);
+    } catch (error) {
+        alert('取得購物車列表失敗，請再次嘗試')
+    }
+  }
+
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -19,6 +33,7 @@ function Week05CartsPage() {
       }
     };
     getProducts();
+    getCart();
   }, []);
 
   const productModalRef = useRef(null);
@@ -54,7 +69,6 @@ function Week05CartsPage() {
       })
     } catch (error) {
       alert ('加入購物車失敗');
-      
     }
   }
  

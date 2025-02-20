@@ -6,9 +6,6 @@ import Pagination from './ components /Pagination';
 import ProductModal from './ components /ProductModal';
 import DelProductModal from './ components /DelProductModal';
 
-//頁面引入
-import Week05CartsPage from './pages/Week05CartsPage';
-
 const BASE_URL = import.meta.env.VITE_BASE_URL ;
 const API_PATH = import.meta.env.VITE_API_PATH ;
 
@@ -134,13 +131,9 @@ function App() {
 
   return (
     <>
-    <Week05CartsPage />
-
-
     { isAuth ? ( 
       <div className="container mt-5">
         <div className="row">
-          <h2 className="pt-5 mb-5 text-center text-black-50 border-top">後台管理 ( Week04 ) </h2>
           {/* 左邊產品列表 */}
           <div className="col">
             <div className="d-flex justify-content-between">
