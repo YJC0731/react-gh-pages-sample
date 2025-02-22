@@ -73,7 +73,7 @@ function Week05CartsPage() {
     }
   }
 
-    // Week05_購物車功能串接|刪除購物資料函式
+    // Week05_購物車功能串接|刪除「全部」購物列表資料函式
     const removeCart = async( ) => {
     try {
       const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/carts`)
@@ -82,6 +82,16 @@ function Week05CartsPage() {
       alert ('刪除購物車失敗');
     }
   }
+
+      // Week05_購物車功能串接|刪除「單一」購物列表資料函式
+      const removeCartItem = async( cartItem_id ) => {
+        try {
+          const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`)
+          getCart();
+        } catch (error) {
+          alert ('該項商品刪除失敗');
+        }
+      }
  
  
  return (
@@ -225,7 +235,7 @@ function Week05CartsPage() {
                 {cart.carts?.map((cartItem)=>(
                   <tr key={cartItem.id}>
                     <td>
-                      <button type="button" className="btn btn-outline-danger btn-sm">
+                      <button onClick={()=>removeCartItem(cartItem.id)} type="button" className="btn btn-outline-danger btn-sm">
                         x
                       </button>
                     </td>
