@@ -83,15 +83,33 @@ function Week05CartsPage() {
     }
   }
 
-      // Week05_購物車功能串接|刪除「單一」購物列表資料函式
-      const removeCartItem = async( cartItem_id ) => {
-        try {
-          const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`)
-          getCart();
-        } catch (error) {
-          alert ('該項商品刪除失敗');
-        }
+    // Week05_購物車功能串接|刪除「單一」購物列表資料函式
+    const removeCartItem = async( cartItem_id ) => {
+      try {
+        const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`)
+        getCart();
+      } catch (error) {
+        alert ('該項商品刪除失敗');
       }
+    }
+
+    // Week05_購物車功能串接|調整購物車產品數量
+    const updateCartItem = async( cartItem_id ,product_id , qty ) => {
+      try {
+        const res = await axios.put(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`,{
+          data:{
+            product_id,
+            qty:Number(qty)
+          }
+        })
+        getCart();
+      } catch (error) {
+        alert ('更新商品數量失敗');
+      }
+    }
+
+
+
  
  
  return (
@@ -244,6 +262,7 @@ function Week05CartsPage() {
                       <div className="d-flex align-items-center">
                         <div className="btn-group me-2" role="group">
                           <button
+                            onClick={()=> updateCartItem(cartItem.id , cartItem.product_id , cartItem.qty - 1)}
                             type="button"
                             className="btn btn-outline-dark btn-sm"
                           >
@@ -256,6 +275,7 @@ function Week05CartsPage() {
                             style={{ width: "50px", cursor: "auto" }}
                           >{cartItem.qty}</span>
                           <button
+                            onClick={()=> updateCartItem(cartItem.id , cartItem.product_id , cartItem.qty + 1)}
                             type="button"
                             className="btn btn-outline-dark btn-sm"
                           >
