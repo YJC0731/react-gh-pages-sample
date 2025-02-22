@@ -382,23 +382,28 @@ function Week05CartsPage() {
                 placeholder="請輸入電話"
               />
 
-
               {/* 當有錯誤時才顯示錯誤資訊 */}
               {errors.tel && <p className="text-danger my-2">{errors.tel.message}</p>}
             </div>
 
+            
+            {/* 訂購人資訊>地址欄位區塊 */}
             <div className="mb-3">
               <label htmlFor="address" className="form-label">
                 收件人地址
               </label>
               <input
+                {...register('address', {
+                  required: '地址欄位必填'
+                })}
                 id="address"
                 type="text"
-                className="form-control"
+                className={`form-control ${errors.address ? 'is-invalid' : ''}`}
                 placeholder="請輸入地址"
               />
 
-              <p className="text-danger my-2"></p>
+              {/* 當有錯誤時才顯示錯誤資訊 */}
+              {errors.address && <p className="text-danger my-2">{errors.address.message}</p>}
             </div>
 
             <div className="mb-3">
