@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Modal } from "bootstrap";
+import { useForm } from "react-hook-form";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -108,9 +109,18 @@ function Week05CartsPage() {
       }
     }
 
+    // Week05_用 React Hook From 做表單驗證
+    const{
+      register,
+      handleSubmit,
+      formState:{ errors }
+    } = useForm()
 
+    // Week05_表單提交函式
+    const onSubmit = handleSubmit((data) => {
+      console.log("表單送出成功！", data)
+    }) 
 
- 
  
  return (
     // 產品列表
@@ -308,21 +318,31 @@ function Week05CartsPage() {
           )}
         </div>
 
+        {/* Week05|用ReactHook From做表單驗證 */}
         <div className="my-5 row justify-content-center">
-          <form className="col-md-6">
+          <form onSubmit={onSubmit} className="col-md-6">
             <div className="mb-3">
+              {/* 綁定 register */}
               <h2 className="mt-5 mb-5">訂購人資訊</h2>
               <label htmlFor="email" className="form-label">
                 Email
               </label>
               <input
+                {...register('email',{
+                  required:'Email欄位必填',
+                  pattern:{ //驗證Email格式
+                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/,
+                   message:'請檢查Email格式,輸入是否正確'
+                  }
+                })}
                 id="email"
                 type="email"
                 className="form-control"
                 placeholder="請輸入 Email"
               />
 
-              <p className="text-danger my-2"></p>
+              {/* 當有錯誤時才顯示錯誤資訊 */}
+              {errors.email && <p className="text-danger my-2">{errors.email.message}</p>}
             </div>
 
             <div className="mb-3">
