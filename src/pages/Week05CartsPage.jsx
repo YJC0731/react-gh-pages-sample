@@ -119,7 +119,18 @@ function Week05CartsPage() {
     // Week05_表單提交函式
     const onSubmit = handleSubmit((data) => {
       console.log("表單送出成功！", data)
+
+      // checkout(userInfo);
     }) 
+
+    //Week05_購物車結帳API
+    const checkout = async (data) => {
+      try {
+        const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/order`, data)
+      } catch (error) {
+        alert ('結帳失敗');
+      }
+      }
 
  
  return (
@@ -406,11 +417,14 @@ function Week05CartsPage() {
               {errors.address && <p className="text-danger my-2">{errors.address.message}</p>}
             </div>
 
+
+            {/* 訂購人資訊>留言欄位區塊 */}
             <div className="mb-3">
               <label htmlFor="message" className="form-label">
                 留言
               </label>
               <textarea
+                {...register('message')}
                 id="message"
                 className="form-control"
                 cols="30"
