@@ -65,11 +65,21 @@ function Week05CartsPage() {
           product_id,
           qty: Number(qty),
         }
-      }).then((res)=>{
-        console.log(res);
       })
+
+      getCart();
     } catch (error) {
       alert ('加入購物車失敗');
+    }
+  }
+
+    // Week05_購物車功能串接|刪除購物資料函式
+    const removeCart = async( ) => {
+    try {
+      const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/carts`)
+      getCart();
+    } catch (error) {
+      alert ('刪除購物車失敗');
     }
   }
  
@@ -189,77 +199,82 @@ function Week05CartsPage() {
             </div>
           </div>
 
-          <div className="mt-5 mb-5">
-            <div className="text-end py-3 d-flex justify-content-between">
-              <h2>購物車清單</h2>
-              <button className="btn btn-outline-danger" type="button">
-                清空購物車
-              </button>
-            </div>
-          </div>
-
-          <table className="table align-middle">
-            <thead>
-              <tr>
-                <th></th>
-                <th>品名</th>
-                <th style={{ width: "150px" }}>數量/單位</th>
-                <th className="text-end">單價</th>
-              </tr>
-            </thead>
-
-            <tbody>
-            {cart.carts?.map((cartItem)=>(
-              <tr key={cartItem.id}>
-                <td>
-                  <button type="button" className="btn btn-outline-danger btn-sm">
-                    x
+          {/* 判斷購物車資料:當購物車沒有資料時，不顯示列表 */}
+          {cart.carts?.length > 0 && (
+            <div>
+              <div className="mt-5 mb-5">
+                <div className="text-end py-3 d-flex justify-content-between">
+                  <h2>購物車清單</h2>
+                  <button onClick={removeCart} className="btn btn-outline-danger" type="button">
+                    清空購物車
                   </button>
-                </td>
-                <td>{cartItem.product.title}</td>
-                <td style={{ width: "150px" }}>
-                  <div className="d-flex align-items-center">
-                    <div className="btn-group me-2" role="group">
-                      <button
-                        type="button"
-                        className="btn btn-outline-dark btn-sm"
-                      >
-                        -
+                </div>
+              </div>
+
+              <table className="table align-middle">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>品名</th>
+                    <th style={{ width: "150px" }}>數量/單位</th>
+                    <th className="text-end">單價</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                {cart.carts?.map((cartItem)=>(
+                  <tr key={cartItem.id}>
+                    <td>
+                      <button type="button" className="btn btn-outline-danger btn-sm">
+                        x
                       </button>
-                      
-                      {/* 數量欄位 */}
-                      <span
-                        className="btn border border-dark"
-                        style={{ width: "50px", cursor: "auto" }}
-                      >{cartItem.qty}</span>
-                      <button
-                        type="button"
-                        className="btn btn-outline-dark btn-sm"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <span className="input-group-text bg-transparent border-0">
-                      {cartItem.product.unit}
-                    </span>
-                  </div>
-                </td>
-                <td className="text-end">{cartItem.total}</td>
-              </tr>
-             ))}
-              
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="3" className="text-end">
-                  總計：
-                </td>
-                <td className="text-end" style={{ width: "130px" }}>
-                  {cart.total}
-                  </td>
-              </tr>
-            </tfoot>
-          </table>
+                    </td>
+                    <td>{cartItem.product.title}</td>
+                    <td style={{ width: "150px" }}>
+                      <div className="d-flex align-items-center">
+                        <div className="btn-group me-2" role="group">
+                          <button
+                            type="button"
+                            className="btn btn-outline-dark btn-sm"
+                          >
+                            -
+                          </button>
+                          
+                          {/* 數量欄位 */}
+                          <span
+                            className="btn border border-dark"
+                            style={{ width: "50px", cursor: "auto" }}
+                          >{cartItem.qty}</span>
+                          <button
+                            type="button"
+                            className="btn btn-outline-dark btn-sm"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="input-group-text bg-transparent border-0">
+                          {cartItem.product.unit}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-end">{cartItem.total}</td>
+                  </tr>
+                ))}
+                  
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan="3" className="text-end">
+                      總計：
+                    </td>
+                    <td className="text-end" style={{ width: "130px" }}>
+                      {cart.total}
+                      </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
         </div>
 
         <div className="my-5 row justify-content-center">
