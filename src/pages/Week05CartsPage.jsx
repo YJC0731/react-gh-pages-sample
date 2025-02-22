@@ -363,18 +363,28 @@ function Week05CartsPage() {
               {errors.name && <p className="text-danger my-2">{errors.name.message}</p>}
             </div>
 
+            {/* 訂購人資訊>電話欄位區塊 */}
             <div className="mb-3">
               <label htmlFor="tel" className="form-label">
                 收件人電話
               </label>
               <input
+                {...register('tel', {
+                  required: '電話欄位必填',
+                  pattern: {
+                    value: /^0[2-8]\d{7}|09\d{8}$/,
+                    message: '請檢查電話格式，輸入是否正確'
+                  }
+                })}
                 id="tel"
                 type="text"
-                className="form-control"
+                className={`form-control ${errors.tel ? 'is-invalid' : ''}`}
                 placeholder="請輸入電話"
               />
 
-              <p className="text-danger my-2"></p>
+
+              {/* 當有錯誤時才顯示錯誤資訊 */}
+              {errors.tel && <p className="text-danger my-2">{errors.tel.message}</p>}
             </div>
 
             <div className="mb-3">
