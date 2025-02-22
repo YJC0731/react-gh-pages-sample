@@ -331,13 +331,13 @@ function Week05CartsPage() {
                 {...register('email',{
                   required:'Email欄位必填',
                   pattern:{ //驗證Email格式
-                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/,
+                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                    message:'請檢查Email格式,輸入是否正確'
                   }
                 })}
                 id="email"
                 type="email"
-                className="form-control"
+                className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                 placeholder="請輸入 Email"
               />
 
@@ -345,17 +345,22 @@ function Week05CartsPage() {
               {errors.email && <p className="text-danger my-2">{errors.email.message}</p>}
             </div>
 
+            {/* 訂購人資訊>姓名欄位區塊 */}
             <div className="mb-3">
               <label htmlFor="name" className="form-label">
                 收件人姓名
               </label>
               <input
+                {...register('name', {
+                  required:'姓名欄位必填'
+                })}
                 id="name"
-                className="form-control"
+                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                 placeholder="請輸入姓名"
               />
 
-              <p className="text-danger my-2"></p>
+              {/* 當有錯誤時才顯示錯誤資訊的判斷條件 */}
+              {errors.name && <p className="text-danger my-2">{errors.name.message}</p>}
             </div>
 
             <div className="mb-3">
