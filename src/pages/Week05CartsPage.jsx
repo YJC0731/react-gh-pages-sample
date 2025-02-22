@@ -263,6 +263,7 @@ function Week05CartsPage() {
                         <div className="btn-group me-2" role="group">
                           <button
                             onClick={()=> updateCartItem(cartItem.id , cartItem.product_id , cartItem.qty - 1)}
+                            disabled={cartItem.qty === 1}
                             type="button"
                             className="btn btn-outline-dark btn-sm"
                           >
