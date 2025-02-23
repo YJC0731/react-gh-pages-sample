@@ -17,6 +17,7 @@ function Week05CartsPage() {
 
   //
   const [ isScreenLoading , setIsScreenLoading ] = useState(false);
+  const [ isLoading , setIsLoading ] = useState(false);
 
    // Week05_取得購物車列表資料|
   const getCart = async () => { 
@@ -73,6 +74,7 @@ function Week05CartsPage() {
 
   // Week05_購物車功能串接|1.加入購物產品函式
   const addCartItem = async( product_id , qty ) => {
+    setIsLoading(true)
     try {
       const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/cart`,{
         data:{
@@ -84,6 +86,8 @@ function Week05CartsPage() {
       getCart();
     } catch (error) {
       alert ('加入購物車失敗');
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -213,11 +217,19 @@ function Week05CartsPage() {
                         查看更多
                       </button>
                       <button 
+                        disabled = {isLoading}
                         onClick={()=> addCartItem(product.id , 1)}
                         type="button" 
-                        className="btn btn-outline-danger"
+                        className="btn btn-outline-danger d-flex align-items-center gap-2"
                       >
                         加到購物車
+                        {isLoading && (
+                        <ReactLoading
+                          type={"spin"}
+                          color={"#000"}
+                          height={"1.5rem"}
+                          width={"1.5rem"}
+                        />)}
                       </button>
                     </div>
                   </td>
@@ -277,11 +289,18 @@ function Week05CartsPage() {
                 </div>
                 <div className="modal-footer">
                   <button 
+                    disabled={isLoading}
                     onClick={()=> addCartItem(tempProduct.id , qtySelect)}
                     type="button" 
-                    className="btn btn-primary"
+                    className="btn btn-primary d-flex align-items-center gap-2"
                   >
                     加入購物車
+                    {isLoading && ( <ReactLoading
+                      type={"spin"}
+                      color={"#000"}
+                      height={"1.5rem"}
+                      width={"1.5rem"}
+                    /> )}
                   </button>
                 </div>
               </div>
