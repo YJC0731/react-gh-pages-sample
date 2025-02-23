@@ -3,6 +3,8 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import { useForm } from "react-hook-form";
 
+import ReactLoading from 'react-loading';
+
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
@@ -12,6 +14,9 @@ function Week05CartsPage() {
 
   // Week05_cart狀態設定|
   const [ cart , setCart ]=useState({});
+
+  //
+  const [ isScreenLoading , setIsScreenLoading ] = useState(false);
 
    // Week05_取得購物車列表資料|
   const getCart = async () => { 
@@ -25,11 +30,14 @@ function Week05CartsPage() {
 
   useEffect(() => {
     const getProducts = async () => {
+      setIsScreenLoading(true);
       try {
         const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/products`);
         setProducts(res.data.products);
       } catch (error) {
         alert("取得產品失敗");
+      } finally {
+        setIsScreenLoading(false)
       }
     };
     getProducts();
@@ -49,6 +57,11 @@ function Week05CartsPage() {
   const closeModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
     modalInstance.hide();
+
+  // 嘗試將焦點移回按鈕
+  setTimeout(() => {
+    document.getElementById(`seeMoreButton-${tempProduct.id}`)?.focus();
+  }, 100);
   };
 
   const handleSeeMore = (product) => {
@@ -76,26 +89,34 @@ function Week05CartsPage() {
 
     // Week05_購物車功能串接|刪除「全部」購物列表資料函式
     const removeCart = async( ) => {
+      setIsScreenLoading(true)
     try {
       const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/carts`)
       getCart();
     } catch (error) {
       alert ('刪除購物車失敗');
+    } finally {
+      setIsScreenLoading(false)
     }
-  }
+    }
+
 
     // Week05_購物車功能串接|刪除「單一」購物列表資料函式
     const removeCartItem = async( cartItem_id ) => {
+      setIsScreenLoading(true)
       try {
         const res = await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`)
         getCart();
       } catch (error) {
         alert ('該項商品刪除失敗');
+      }finally{
+        setIsScreenLoading(false)
       }
     }
 
     // Week05_購物車功能串接|調整購物車產品數量
     const updateCartItem = async( cartItem_id ,product_id , qty ) => {
+      setIsScreenLoading(true)
       try {
         const res = await axios.put(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`,{
           data:{
@@ -106,8 +127,10 @@ function Week05CartsPage() {
         getCart();
       } catch (error) {
         alert ('更新商品數量失敗');
+      } finally {
+        setIsScreenLoading(false)
       }
-    }
+    } 
 
     // Week05_用 React Hook From 做表單驗證
     const{
@@ -136,10 +159,13 @@ function Week05CartsPage() {
 
     //Week05_購物車結帳API
     const checkout = async (data) => {
+      setIsScreenLoading(true)
       try {
         const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/order`, data)
       } catch (error) {
         alert ('結帳失敗');
+      } finally{
+        setIsScreenLoading(false)
       }
       }
 
@@ -177,6 +203,7 @@ function Week05CartsPage() {
                   <td>
                     <div className="btn-group btn-group-sm">
                       <button
+                        id={`seeMoreButton-${product.id}`} // 為每個產品的按鈕加上唯一 ID
                         onClick={() => handleSeeMore(product)}
                         type="button"
                         className="btn btn-outline-secondary"
@@ -211,10 +238,10 @@ function Week05CartsPage() {
                     產品名稱：{tempProduct.title}
                   </h2>
                   <button
-                    onClick={closeModal}
+                    onClick={closeModal} // 讓 closeModal() 負責關閉
                     type="button"
                     className="btn-close"
-                    data-bs-dismiss="modal"
+                    // data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
                 </div>
@@ -450,6 +477,23 @@ function Week05CartsPage() {
           </form>
         </div>
       </div>  
+    
+      {/* Week05_全螢幕Loading模板資料 */}
+      { isScreenLoading && (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(255,255,255,0.3)",
+              zIndex: 999,}}
+        >
+          <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
+        </div>
+      )}
+      
+      
+    
     </div>
   );
 }
