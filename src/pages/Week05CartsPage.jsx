@@ -136,7 +136,8 @@ function Week05CartsPage() {
     const{
       register,
       handleSubmit,
-      formState:{ errors }
+      formState:{ errors },
+      reset //透過 reset 清空表單
     } = useForm()
 
     // Week05_表單提交函式
@@ -162,6 +163,7 @@ function Week05CartsPage() {
       setIsScreenLoading(true)
       try {
         const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/order`, data)
+        reset() //透過 reset 清空表單
       } catch (error) {
         alert ('結帳失敗');
       } finally{
