@@ -118,9 +118,20 @@ function Week05CartsPage() {
 
     // Week05_表單提交函式
     const onSubmit = handleSubmit((data) => {
-      console.log("表單送出成功！", data)
+      console.log("表單送出成功！", data) //方便開發時檢查表單內容輸出資料
 
-      // checkout(userInfo);
+      const { message , ...user } = data; //拆解物件，將message從data取出，剩下的內容存進user變數
+
+      //Ｗeek05 | 重新整理資料格式
+      //將 user 和 message 被包進 data 物件裡，再重新包裝成一個新物件 userInfo
+      const userInfo = {
+        data:{
+          user,
+          message
+        }
+      }
+      //呼叫 checkout 這個函式，把整理好的 userInfo 傳給後端 API，進行結帳
+      checkout(userInfo);
     }) 
 
     //Week05_購物車結帳API
