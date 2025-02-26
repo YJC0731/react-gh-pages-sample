@@ -1,9 +1,17 @@
 import { createHashRouter } from "react-router-dom";
+import FrontLayout from "../layouts/FrontLayout";
+import HomePage from "../pages/HomePages";
 
 const router = createHashRouter([
     {
        path:'/',
-       element: <h1 className="mt-5 text-center"> Week06店鋪 | 歡迎你 ( index ) </h1> 
+       element: <FrontLayout />,
+       children: [
+        {
+            path:'',
+            element:<HomePage />, 
+        }
+      ]
     }
 ])
 
