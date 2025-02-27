@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { Modal } from "bootstrap";
-import { useForm } from "react-hook-form";
 
 import ReactLoading from 'react-loading';
+import { Link } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -82,14 +81,13 @@ export default function ProductsListPage () {
                             </td>
                             <td>
                             <div className="btn-group btn-group-sm">
-                                <button
+                                <Link
+                                to={`/products/${product.id}`}
                                 id={`seeMoreButton-${product.id}`} // 為每個產品的按鈕加上唯一 ID
-                                //onClick={() => handleSeeMore(product)}//後續會改成:Link 點擊後跳轉到產品詳細頁面->因此此處可以先做刪除
-                                type="button"
                                 className="btn btn-outline-secondary"
                                 >
                                 查看更多
-                                </button>
+                                </Link>
                                 <button 
                                 disabled = {isLoading}
                                 onClick={()=> addCartItem(product.id , 1)}
