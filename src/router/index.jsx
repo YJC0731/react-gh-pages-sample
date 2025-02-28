@@ -54,15 +54,15 @@ const router = createHashRouter([
                 element:<AdminLoginPage /> 
             },
             {
-                path:'admin-order',
+                path:'order',
                 element: <AdminOrderPage />, 
             }, 
             {
-                path:'admin-products',
+                path:'products',
                 element:<AdminProductsPage />, 
             },
             {
-                path:'admin-coupon',
+                path:'coupon',
                 element:<AdminCouponPage />, 
             },
             {

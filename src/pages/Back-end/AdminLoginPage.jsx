@@ -38,7 +38,7 @@ export default function AdminLoginPage(){
       axios.defaults.headers.common['Authorization'] = token; 
 
       alert('登入成功');
-      navigate('/admin/admin-products'); //確保路徑正確
+      navigate('/admin/products'); //確保路徑正確
     } catch (error) {
       alert('登入失敗');
     }
