@@ -4,6 +4,7 @@ import HomePage from "../pages/Front-end/HomePages";
 import ProductsListPage from "../pages/Front-end/ProductsListPage";
 import ProductDetailPage from "../pages/Front-end/ProductDetailPage";
 import CartPage from "../pages/Front-end/CartPage";
+import NotFoundPage from "../pages/Front-end/NotFoundPage";
 
 const router = createHashRouter([
     {
@@ -27,6 +28,10 @@ const router = createHashRouter([
             element:<CartPage />, 
         }
       ]
+    },
+    {
+       path:'*',
+       element: <NotFoundPage />,
     }
 ])
 
