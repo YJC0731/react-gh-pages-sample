@@ -1,10 +1,14 @@
+import { Outlet, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
 
+const routes = [{ path: '/', name: '回到首頁' }];
+
 const BASE_URL = import.meta.env.VITE_BASE_URL ;
 
-function LoginPage(getProducts){
-    
+
+export default function BackendLayout(){
+
     const [account, setAccount] = useState({
         username: "example@test.com",
         password: "example",
@@ -44,8 +48,35 @@ function LoginPage(getProducts){
       }
     };
 
-    return(
-    //已完成的登入模板
+    return (
+      <>
+        {/* 導覽列 */}
+        <nav className="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+            <div className="container">
+                <ul className="navbar-nav flex-row gap-5 fs-5">
+                    
+                    {/* 使用 .map() 渲染導覽列按鈕 */}
+                    {routes.map((routes) => (
+                        <li 
+                            key={routes.path} 
+                            className="nav-item">
+                        
+                        {/* NavLink負責頁面切換： */}
+                        <NavLink 
+                            className="nav-link" 
+                            aria-current="page" 
+                            to={routes.path}
+                            >
+                            {routes.name}
+                        </NavLink>
+                        </li>
+                        )
+                    )}
+                </ul>
+            </div>
+        </nav>
+
+        {/* 已完成的登入模板 */}
         <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <h1 className="mb-5">請先登入</h1>
         <form onSubmit={handleLogin} className="d-flex flex-column gap-3">
@@ -76,8 +107,10 @@ function LoginPage(getProducts){
         <button className="btn btn-primary">登入</button>
         </form>
         <p className="mt-5 mb-3 text-muted">&copy; 2024~∞ - 六角學院</p>
-    </div>
-  )
+        </div>
+        
+        {/* 顯示動態內容 */}
+        <Outlet/>
+      </>
+       )
 }
-
-export default LoginPage;
