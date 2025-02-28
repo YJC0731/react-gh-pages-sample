@@ -15,7 +15,7 @@ function Week05CartsPage() {
   // Week05_cart狀態設定|
   const [ cart , setCart ]=useState({});
 
-  //
+  // Week05_Loading狀態設定
   const [ isScreenLoading , setIsScreenLoading ] = useState(false);
   const [ isLoading , setIsLoading ] = useState(false);
 
@@ -104,7 +104,6 @@ function Week05CartsPage() {
     }
     }
 
-
     // Week05_購物車功能串接|刪除「單一」購物列表資料函式
     const removeCartItem = async( cartItem_id ) => {
       setIsScreenLoading(true)
@@ -174,7 +173,6 @@ function Week05CartsPage() {
         setIsScreenLoading(false)
       }
       }
-
  
  return (
     // 產品列表
@@ -512,9 +510,7 @@ function Week05CartsPage() {
           <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
         </div>
       )}
-      
-      
-    
+
     </div>
   );
 }

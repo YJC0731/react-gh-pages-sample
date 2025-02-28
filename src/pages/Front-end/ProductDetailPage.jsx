@@ -11,6 +11,7 @@ export default function ProductDetailPage(){
     const [ product, setProduct ] = useState({});
     const [ qtySelect, setQtySelect ] = useState(1); 
     const [ isLoading , setIsLoading ] = useState(false);
+    const [ isScreenLoading , setIsScreenLoading ] = useState(false);
 
     //透過 useParams 拿到路由的 id 
     const {id:product_id} = useParams();
@@ -18,14 +19,14 @@ export default function ProductDetailPage(){
     // Week06_取得單一產品資料
     useEffect(() => {
         const getProduct = async () => {
-        //   setIsScreenLoading(true);
+          setIsScreenLoading(true);
           try {
             const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/product/${product_id}`);
             setProduct(res.data.product);
           } catch (error) {
             alert("取得產品失敗");
           } finally {
-            // setIsScreenLoading(false)
+            setIsScreenLoading(false)
           }
         };
         getProduct();
@@ -50,8 +51,8 @@ export default function ProductDetailPage(){
         }
     }
 
-    
     return(
+     <>
       <div className="container mt-5">
         <div className="row">
             <div className="col-6">
@@ -96,6 +97,21 @@ export default function ProductDetailPage(){
             </div>
         </div>
       </div>
-       
+
+      {/* Week05_全螢幕Loading模板資料 */}
+      { isScreenLoading && (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(255,255,255,0.3)",
+            zIndex: 999,}}
+      >
+        <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
+      </div>
+      )} 
+
+     </>
     )
 }

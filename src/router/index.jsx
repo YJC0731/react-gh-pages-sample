@@ -3,6 +3,7 @@ import FrontLayout from "../layouts/FrontLayout";
 import HomePage from "../pages/Front-end/HomePages";
 import ProductsListPage from "../pages/Front-end/ProductsListPage";
 import ProductDetailPage from "../pages/Front-end/ProductDetailPage";
+import CartPage from "../pages/Front-end/CartPage";
 
 const router = createHashRouter([
     {
@@ -20,6 +21,10 @@ const router = createHashRouter([
         {
             path:'products/:id',
             element:<ProductDetailPage />, 
+        },
+        {
+            path:'cart',
+            element:<CartPage />, 
         }
       ]
     }
