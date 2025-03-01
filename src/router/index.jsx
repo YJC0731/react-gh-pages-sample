@@ -1,4 +1,6 @@
 import { createHashRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
 //前台頁面
 import FrontLayout from "../layouts/FrontLayout";
 import HomePage from "../pages/Front-end/HomePages";
@@ -39,11 +41,7 @@ const router = createHashRouter([
         }
       ]
     },
-    {
-       path:'*',
-       element: <NotFoundPage />,
-    },
-
+    
     //後台管理系統頁面
     {
         path:'/admin',
@@ -54,7 +52,7 @@ const router = createHashRouter([
                 element:<AdminLoginPage /> 
             },
             {
-                path:'order',
+                path:'orders',
                 element: <AdminOrderPage />, 
             }, 
             {
@@ -67,11 +65,12 @@ const router = createHashRouter([
             },
           ]
     },
+    //最後放置 catch-all 路由
     {
         path:'*',
         element: <NotFoundPage />,
     },
-
-])
+  ],
+);
 
 export default router;

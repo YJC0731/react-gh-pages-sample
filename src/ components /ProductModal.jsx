@@ -2,8 +2,7 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'bootstrap';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL ;
-const API_PATH = import.meta.env.VITE_API_PATH ;
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 
 function ProductModal({ 
@@ -111,7 +110,7 @@ function ProductModal({
         {/* 串接新增商品 API */}
         const createProduct = async () => {
             try {
-            await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/product`,{
+            await axios.post(`${baseUrl}/v2/api/${apiPath}/admin/product`,{
                 data:{
                 ...modalData,
                 origin_price:Number(modalData.origin_price),
@@ -128,7 +127,7 @@ function ProductModal({
         {/* 串接編輯商品 API */}
         const updateProduct = async () => {
             try {
-            await axios.put(`${BASE_URL}/v2/api/${API_PATH}/admin/product/${modalData.id}`,{
+            await axios.put(`${baseUrl}/v2/api/${apiPath}/admin/product/${modalData.id}`,{
                 data:{
                 ...modalData,
                 origin_price:Number(modalData.origin_price),
@@ -167,7 +166,7 @@ function ProductModal({
             formData.append('file-to-upload',file)
 
         try {
-        const res = await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/upload`,formData);
+        const res = await axios.post(`${baseUrl}/v2/api/${apiPath}/admin/upload`,formData);
 
         const uploadedImagerl = res.data.imageUrl;
 
