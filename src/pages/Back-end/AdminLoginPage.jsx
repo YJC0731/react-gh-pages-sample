@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { NavLink } from 'react-router-dom';
 
 const { VITE_BASE_URL: baseUrl } = import.meta.env;
 
 
 export default function AdminLoginPage(){
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 控制登入狀態
+
    //登入資訊
     const [account, setAccount] = useState({
         username: '',
@@ -22,6 +26,7 @@ export default function AdminLoginPage(){
     });
   };
 
+  // 處理登入與登出
   const navigate = useNavigate();
   const handleLogin = async (event) => {
     event.preventDefault(); //移除預設觸發行為：防止表單預設提交
@@ -38,14 +43,18 @@ export default function AdminLoginPage(){
       axios.defaults.headers.common['Authorization'] = token; 
 
       alert('登入成功');
+      setIsLoggedIn(true);
       navigate('/admin/products'); //確保路徑正確
     } catch (error) {
       alert('登入失敗');
     }
   };
 
+
   return(
-    //已完成的登入模板
+    <>
+    <ReactHelmetAsync title="後台管理入口" />
+    {/* //登入模板 */}
         <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <h1 className="mb-5">請先登入</h1>
         <form 
@@ -76,9 +85,21 @@ export default function AdminLoginPage(){
             />
             <label htmlFor="password">Password</label>
         </div>
-        <button className="btn btn-primary">登入</button>
+
+        {isLoggedIn ? ('') : (
+        <NavLink
+          className="btn btn-primary"
+          to="/admin/products" 
+          onClick={handleLogin}
+          >
+            登入
+          </NavLink>
+          ) }
+
+
         </form>
         <p className="mt-5 mb-3 text-muted">&copy; 2024~∞ - 六角學院</p>
     </div>
+   </>
   );
 };

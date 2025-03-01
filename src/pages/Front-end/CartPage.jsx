@@ -3,6 +3,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 
 import ReactLoading from 'react-loading';
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -116,6 +117,7 @@ export default function  CartPage(){
     
     return(
       <>
+        <ReactHelmetAsync title="購物車" />
         <div className="container">
         <div>
             {/* 判斷購物車資料:當購物車沒有資料時，不顯示列表 */}

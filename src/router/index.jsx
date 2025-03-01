@@ -47,7 +47,7 @@ const router = createHashRouter([
     //後台管理系統頁面
     {
         path:'/admin',
-        element: < BackendLayout />,
+        element: < BackendLayout />, //這裡是後台框架
         children: [
             {
                 path:'login', //改成相對路徑，讓它變成 `/admin/login`，同時確保是 'login'，而不是 '/login'
@@ -65,13 +65,13 @@ const router = createHashRouter([
                 path:'coupon',
                 element:<AdminCouponPage />, 
             },
-            {
-                path:'*',
-                element: <NotFoundPage />,
-             },
-            
           ]
-    }
+    },
+    {
+        path:'*',
+        element: <NotFoundPage />,
+    },
+
 ])
 
 export default router;

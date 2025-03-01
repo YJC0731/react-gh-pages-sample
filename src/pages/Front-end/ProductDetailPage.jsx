@@ -53,6 +53,7 @@ export default function ProductDetailPage(){
 
     return(
      <>
+     < ReactHelmetAsync title="商品介紹頁" />
       <div className="container mt-5">
         <div className="row">
             <div className="col-6">

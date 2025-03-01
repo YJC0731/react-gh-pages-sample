@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import AutoScrollToTop from "../plugins/AutoScrollToTop";
 
 const routes = [
     { path: "/", name: "首頁" },
@@ -10,6 +11,7 @@ const routes = [
 export default function FrontLayout(){
     return(
      <>
+        <AutoScrollToTop />
         <nav className="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
             <div className="container justify-content-center">
                 <ul className="navbar-nav flex-row gap-5 fs-5">

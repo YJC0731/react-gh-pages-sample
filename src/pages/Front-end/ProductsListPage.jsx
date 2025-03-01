@@ -3,6 +3,7 @@ import axios from "axios";
 
 import ReactLoading from 'react-loading';
 import { Link } from "react-router-dom";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -53,8 +54,9 @@ export default function ProductsListPage () {
 
     return(
       <>
+       < ReactHelmetAsync title="商品總覽" />
         <div className="container">
-            <h2 className="mt-5 mb-5">React本鋪｜商品總覽</h2>
+            <h2 className="mt-5 mb-5">冬季限定本鋪｜商品總覽</h2>
                 <table className="table align-middle">
                     <thead className="fs-5">
                         <tr>
