@@ -5,6 +5,7 @@ import LoginPage from '../LoginPage';
 import Pagination from '../../ components /Pagination';
 import ProductModal from '../../ components /ProductModal';
 import DelProductModal from '../../ components /DelProductModal';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -131,6 +132,7 @@ export default function AdminProductsPage(){
 
   return (
     <>
+      <ReactHelmetAsync title="後台系統｜產品管理頁面" />
       <div className="container py-5">
         <div className="row">
           {/* 左邊產品列表 */}

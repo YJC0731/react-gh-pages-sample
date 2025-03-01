@@ -10,8 +10,6 @@ import { useNavigate } from 'react-router-dom';
     { path: '/admin/coupon', name: '優惠券管理' },
     ];
 
-    // 根據 `isLoggedIn` 動態切換選單
-    const menuItems = isLoggedIn ? [...guestRoutes, ...loggedInRoutes] : guestRoutes;
 
 
 export default function BackendLayout(){
@@ -20,6 +18,8 @@ export default function BackendLayout(){
   const headerRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 控制登入狀態
+  // 根據 `isLoggedIn` 動態切換選單
+  const menuItems = isLoggedIn ? [...guestRoutes, ...loggedInRoutes] : guestRoutes;
   const navigate = useNavigate();
   
   
