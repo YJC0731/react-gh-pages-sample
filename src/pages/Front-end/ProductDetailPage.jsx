@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import ReactLoading from 'react-loading';
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
+
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
