@@ -1,7 +1,7 @@
 // 外部資源
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Pagination from '../../ components /Pagination';
+import Pagination from '../../components/Pagination';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import { useNavigate } from 'react-router-dom';
 import ReactLoading from 'react-loading';
@@ -159,7 +159,7 @@ export default function AdminOrderPage() {
 
                   {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
                   {orderList?.length > 0 && (
-                    <Pagination 
+                    <Pagination
                       pageInfo={pageInfo} 
                       handlePageChenge={handlePageChenge} />
                   )}

@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginPage from '../LoginPage';
-import Pagination from '../../ components /Pagination';
-import ProductModal from '../../ components /ProductModal';
-import DelProductModal from '../../ components /DelProductModal';
+import Pagination from '../../components/Pagination';
+import ProductModal from '../../components/ProductModal';
+import DelProductModal from '../../components/DelProductModal';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;

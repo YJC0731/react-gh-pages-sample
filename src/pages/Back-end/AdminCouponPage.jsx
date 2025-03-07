@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
+import Pagination from '../../components/Pagination';
+
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -151,7 +153,7 @@ export default function AdminCouponPage(){
 
                                 {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
                                 {couponList?.length > 0 && (
-                                <Pagination 
+                                <Pagination
                                     pageInfo={pageInfo} 
                                     handlePageChenge={handlePageChenge} />
                                 )}
