@@ -5,7 +5,6 @@ import Pagination from '../../components/Pagination';
 import ProductModal from '../../components/ProductModal';
 import DelProductModal from '../../components/DelProductModal';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import Toast from '../../components/Toast';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -226,8 +225,6 @@ export default function AdminProductsPage(){
             setIsOpen={setIsDelProductModalOpen}
             getProducts={getProducts}
         />
-
-        <Toast />
 
    </>
   );
