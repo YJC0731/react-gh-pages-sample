@@ -6,11 +6,15 @@ const messages = [
     '全新客製化電子卡片 和 包裝挑選功能，預計2025 ∞ ~ 上線，敬請期待！',
   ];
 
-const MarqueeText = ({ headerRef, headerHeight }) => {
+const MarqueeText = ({ headerRef, headerHeight, setHeaderHeight }) => {
+// 控制修正 header 使用 fix top 的高度使用
+const bannerRef = useRef(null);
 
 useEffect(() => {
     const updateHeaderHeight = () => {
-        const headerHeight = headerRef.current?.offsetHeight || 0;
+      const bannerHeight = bannerRef.current?.offsetHeight || 0;
+      const headerHeight = headerRef.current?.offsetHeight || 0;
+      setHeaderHeight(bannerHeight + headerHeight);
     };
 
     // 初始計算
@@ -18,8 +22,8 @@ useEffect(() => {
 
     // 監聽視窗大小變化，當跑馬燈換行時重新計算
     window.addEventListener('resize', updateHeaderHeight);
-    return () => window.removeEventListener('resize', updateHeaderHeight);
-    }, [headerHeight]);
+       return () => window.removeEventListener('resize', updateHeaderHeight);
+     }, [headerHeight]);
 
     // 文字淡入淡出動畫
     const [index, setIndex] = useState(0);
@@ -40,7 +44,7 @@ useEffect(() => {
 
     return (
     <>
-        <div className="bg-white">
+        <div ref={bannerRef} className="bg-white">
         <div
             className="py-3 border border-light"
             // style={{

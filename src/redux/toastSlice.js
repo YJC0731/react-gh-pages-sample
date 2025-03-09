@@ -1,6 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { messages: [] } ;
+const initialState = {
+    messages: [
+      {
+        id: Date.now(),
+        text: "hello",
+        status: "success",
+      },
+    ],
+  };
 
 const toastSlice = createSlice({
     name:'toast',

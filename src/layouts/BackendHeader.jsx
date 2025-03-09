@@ -1,6 +1,7 @@
 import { Outlet,NavLink } from 'react-router-dom';
 import { useRef,useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+// import MarqueeText from './MarqueeText';
 
 //定義未登入與登入的選單（路由）
     const guestRoutes = [{ path: '/', name: '網站前台' }];
@@ -46,6 +47,11 @@ export default function BackendLayout(){
       <>
       {/* 登入狀態 navbar */}
       <div className="fixed-top ">
+      {/* <MarqueeText
+          headerRef={headerRef}
+          headerHeight={headerHeight}
+          setHeaderHeight={setHeaderHeight}
+        /> */}
         <nav ref={headerRef} className="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
             <div className="container">
                 <ul className="navbar-nav flex-row gap-5 fs-5">
