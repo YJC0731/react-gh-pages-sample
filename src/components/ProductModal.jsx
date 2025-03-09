@@ -130,7 +130,7 @@ function ProductModal({
             const { message } = error.response.data;
 
             dispatch(pushMessage({
-                text: message,
+                text: message.join('、'),
                 status:'failed'
             }))
             }
@@ -148,6 +148,11 @@ function ProductModal({
                 is_hot:modalData.is_hot ? 1 : 0 //Week04_lv3任務:新增自訂欄位：是否為熱銷產品 is_hot
                 },
             }) ;
+            dispatch(pushMessage({
+                text: '編輯產品成功',
+                status:'success'
+            }))
+
             } catch (error) {
             alert('編輯產品失敗');
             }
