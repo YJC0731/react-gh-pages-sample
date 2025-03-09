@@ -20,11 +20,21 @@ const toastSlice = createSlice({
           text,
           status
         })
+      },
+      //設定刪除存在Store裡的舊吐司訊息
+      removeMessage(state, action){
+        const message_id = action.payload;
+
+        const index = state.messages.findIndex((message)=> message_id === message_id );
+
+        if (index !== -1){
+          state.messages.splice(index,1);
+        }
       }
     }
     
 })
 
-export const { pushMessage } = toastSlice.actions;
+export const { pushMessage , removeMessage  } = toastSlice.actions;
 
 export default toastSlice.reducer;
