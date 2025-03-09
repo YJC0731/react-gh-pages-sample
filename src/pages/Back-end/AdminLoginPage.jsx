@@ -26,7 +26,7 @@ export default function AdminLoginPage(){
     });
   };
 
-  // 處理登入與登出
+  // 處理登入
   const navigate = useNavigate();
   const handleLogin = async (event) => {
     event.preventDefault(); //移除預設觸發行為：防止表單預設提交

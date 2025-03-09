@@ -8,7 +8,7 @@ const ReactHelmetAsync = ({title="請設定 title"}) => {
     <>
       <HelmetProvider>
         <Helmet>
-          <title>{title} | Week06_React冬季限定本鋪 ( 2024.11 - 2025.03 ) </title>
+          <title>{title} | Week07_React冬季限定本鋪 ( 2024.11 - 2025.03 ) </title>
         </Helmet>
       </HelmetProvider>
     </>
