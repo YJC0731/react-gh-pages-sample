@@ -16,11 +16,11 @@ export default function Toast ( ) {
             const messageElement = toastRefs.current[message.id];
 
             if(messageElement){
-                const totasInstance = new BsToast(messageElement);
-                totasInstance.show();
+                const totastInstance = new BsToast(messageElement);
+                totastInstance.show();
             }
         })
-    })
+    },[messages])
 
 
     return (

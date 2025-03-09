@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import { pushMessage } from '../redux/toastSlice';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -46,6 +48,9 @@ function ProductModal({
               modalInstance.show();
             }
         },[isOpen]) //當isOpen有更新時， 判斷是否需要開modal
+
+        
+        const dispatch = useDispatch();
 
 
         {/* 點擊Ｍodal的取消＆Ｘ按鈕會進行關閉 */}
@@ -120,7 +125,14 @@ function ProductModal({
                 },
             });
             } catch (error) {
-            alert('新增產品失敗');
+            //alert('新增產品失敗');
+            //解構message,將後端回傳的錯誤訊息渲染在toast中
+            const { message } = error.response.data;
+
+            dispatch(pushMessage({
+                text: message,
+                status:'failed'
+            }))
             }
         };
   
