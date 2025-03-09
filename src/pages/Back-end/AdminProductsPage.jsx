@@ -128,7 +128,6 @@ export default function AdminProductsPage(){
     getProducts(page);
   }
 
-
   return (
     <>
       <ReactHelmetAsync title="後台系統｜產品管理頁面" />

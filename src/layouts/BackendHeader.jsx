@@ -1,7 +1,11 @@
 import { Outlet,NavLink } from 'react-router-dom';
 import { useRef,useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios"; // 確保有引入 axios
 // import MarqueeText from './MarqueeText';
+
+// 環境變數
+const { VITE_BASE_URL: baseUrl } = import.meta.env;
 
 //定義未登入與登入的選單（路由）
     const guestRoutes = [{ path: '/', name: '網站前台' }];
@@ -10,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
     { path: '/admin/products', name: '商品管理' },
     { path: '/admin/coupon', name: '優惠券管理' },
     ];
-
 
 
 export default function BackendLayout(){
@@ -37,21 +40,23 @@ export default function BackendLayout(){
       navigate('/admin/products'); // 只在登入頁才跳轉
   };
     
+  
   // 登出時重設狀態並回到首頁  
-  const handleLogout = () => {
-        setIsLoggedIn(false);
-        navigate('/admin/login'); // 登出後回首頁
-    };
+    const handleLogout = async () => {
+        try {
+            await axios.post(`${baseUrl}/v2/logout`);
+            setIsLoggedIn(false);
+            navigate('/admin/login'); // 登出後跳轉
+            } catch (error) {
+            alert('登出失敗');
+    }
+  };
+
 
     return (
       <>
       {/* 登入狀態 navbar */}
       <div className="fixed-top ">
-      {/* <MarqueeText
-          headerRef={headerRef}
-          headerHeight={headerHeight}
-          setHeaderHeight={setHeaderHeight}
-        /> */}
         <nav ref={headerRef} className="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
             <div className="container">
                 <ul className="navbar-nav flex-row gap-5 fs-5">
@@ -70,20 +75,20 @@ export default function BackendLayout(){
 
                 {/* 登入 / 登出按鈕 */}
                 {isLoggedIn ? (
-                    <NavLink 
-                        to='/admin/login' 
+                    <button 
+                        type='submit'
                         className="btn btn-outline-light ms-3" 
                         onClick={handleLogout}
                     >
                         登出
-                    </NavLink >
+                    </button >
                     ) : (
-                    <NavLink 
-                        to="/admin/products" 
+                    <button 
+                        type='submit'
                         onClick={handleLogin}
                         className="btn btn-outline-light ms-3" >
                         登入
-                    </NavLink>
+                    </button>
                     )}
             </div>
         </nav>
